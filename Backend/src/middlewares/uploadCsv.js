@@ -1,18 +1,8 @@
 import multer from "multer";
 import path from "path";
 
-// Storage config (save locally)
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/csv/");
-  },
-
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + "-" + file.originalname;
-
-    cb(null, uniqueName);
-  },
-});
+// Use memory storage instead of disk for better production compatibility
+const storage = multer.memoryStorage();
 
 // File filter — allow ONLY CSV
 const fileFilter = (req, file, cb) => {

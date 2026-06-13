@@ -1,4 +1,4 @@
-# 🎓 Admission Management System
+# 🎓IIIT Dharwad Admission Management System
 
 A comprehensive full-stack web application designed to streamline and automate the admission process for educational institutions. This system provides role-based access control for administrators, students, verifiers, and accountancy staff to manage admissions efficiently.
 

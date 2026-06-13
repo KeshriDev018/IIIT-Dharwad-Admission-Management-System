@@ -1,5 +1,5 @@
-import fs from "fs";
 import csv from "csv-parser";
+import { Readable } from "stream";
 
 import Csab from "../models/CsabAllotment.model.js";
 
@@ -12,7 +12,9 @@ export const uploadCsabData = async (req, res) => {
 
     const results = [];
 
-    fs.createReadStream(req.file.path)
+    // Create a readable stream from buffer
+    const bufferStream = Readable.from([req.file.buffer]);
+    bufferStream
       .pipe(csv())
       .on("data", (data) => {
         //Map CSV columns → DB fields EXACTLY
@@ -66,12 +68,15 @@ export const uploadCsabData = async (req, res) => {
           res.json({
             message: "CSAB data uploaded successfully",
             totalRecords: results.length,
-            fileName: req.file.originalname, // ADD THIS
+            fileName: req.file.originalname,
             uploadDate: new Date(),
           });
         } catch (err) {
           res.status(500).json({ message: err.message });
         }
+      })
+      .on("error", (err) => {
+        res.status(500).json({ message: "Error parsing CSV: " + err.message });
       });
   } catch (err) {
     res.status(500).json({ message: err.message });
